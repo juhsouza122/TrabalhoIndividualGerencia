@@ -8,53 +8,57 @@ import Book from '../../Components/Book';
 
 const Home = () => {
     const [books, setBooks] = useState([]);
-
+  
     const navigate = useNavigate();
-
+  
     const donate = () => {
-        navigate('/donate');
-    }
-
-    const resBooks = async () => {
-        await getBooks()
-        .then((response) => setBooks(response?.data));
+      navigate('/donate');
     };
-
+  
+    const resBooks = async () => {
+      try {
+        const response = await getBooks();
+        setBooks(response?.data);
+      } catch (error) {
+        console.error('Erro ao obter os livros:', error);
+      }
+    };
+  
     useEffect(() => {
-        resBooks();
+      resBooks();
     }, []);
-
-      const listBooks = books.map((book) =>
+  
+    let listBooks;
+    if (books && books.length > 0) {
+      listBooks = books.map((book) => (
         <Book
-            title={book.title}
-            author={book.author}
-            release_year={book.release_year}
-            renter={book.renter}
-            id={book.id}
-            is_rented={book.is_rented}
-            messageAlert={"Livro alugado com sucesso"}
-            messageTernario={"Alugar livro"}
+          title={book.title}
+          author={book.author}
+          release_year={book.release_year}
+          renter={book.renter}
+          id={book.id}
+          is_rented={book.is_rented}
+          messageAlert={'Livro alugado com sucesso'}
+          messageTernario={'Alugar livro'}
         />
-      );
-
-return(
-    <Background>
-            <h1>
-                Bem vindo a Biblioteca
-            </h1>
-            <h1>
-                Livros disponíveis
-            </h1>
-            <ServicesBook>
-                <Button title="Doar livro" type="side" changeButton={donate}/>
-            </ServicesBook>
+      ));
+    } else {
+      listBooks = <p>Nenhum livro disponível no momento.</p>;
+    }
+  
+    return (
+      <Background>
+        <h1>Bem-vindo à Biblioteca</h1>
+        <h1>Livros disponíveis</h1>
+        <ServicesBook>
+          <Button title="Doar livro" type="side" changeButton={donate} />
+        </ServicesBook>
         <Center>
-            <BooksList>
-                {listBooks}
-            </BooksList>
+          <BooksList>{listBooks}</BooksList>
         </Center>
-    </Background>
-    )
-}
+      </Background>
+    );
+  };
+  
 
 export default Home;
