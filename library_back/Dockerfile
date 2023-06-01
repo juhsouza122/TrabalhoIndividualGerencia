@@ -1,8 +1,13 @@
-FROM python:3-alpine
+FROM python:latest
 WORKDIR /app
 COPY ./ ./
-RUN apk add --no-cache postgresql-libs
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
+
+ENV POSTGRES_DB=library_db
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres
+ENV POSTGRES_HOST=db
+ENV POSTGRES_PORT=5432
+
 RUN python3 -m pip install -r requirements.txt
 EXPOSE 8000
 CMD python3 manage.py makemigrations ; python3 manage.py migrate ; python3 manage.py runserver 0.0.0.0:8000

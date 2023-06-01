@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import { Background, Center, BooksList } from './Style';
 import { rentedUserBooks } from '../../Services/Axios/bookService';
 import Book from '../../Components/Book';
